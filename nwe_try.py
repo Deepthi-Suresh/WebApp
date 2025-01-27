@@ -7,10 +7,10 @@ from io import BytesIO
 # Step 1: Read the original Excel files (monthly and weekly)
 def load_data():
     # Load the original monthly data (the file paths can be adjusted)
-    monthly_data = pd.read_excel(r"C:\Users\SURESHD\Desktop\nwe.xlsx")
+    monthly_data = pd.read_excel("nwe.xlsx")
     
     # Load the updated weekly data (the file paths can be adjusted)
-    weekly_data = pd.read_excel(r"C:\Users\SURESHD\Desktop\weekly.xlsx")
+    weekly_data = pd.read_excel("weekly.xlsx")
     
     return monthly_data, weekly_data
 
