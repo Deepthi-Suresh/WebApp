@@ -18,8 +18,8 @@ def load_data():
 def process_user_input(monthly_data):
     # Configure the editable grid for user input (only "User Input" column)
     gb = GridOptionsBuilder.from_dataframe(monthly_data)
-    gb.configure_column("SKU", editable=False)  # Make 'Parameter' non-editable
-    gb.configure_column("Rebalancing", editable=True)  # Make 'User Input' editable
+    gb.configure_column("SKU", editable=False,width=250)  # Make 'Parameter' non-editable
+    gb.configure_column("Rebalancing", editable=True, width=250)  # Make 'User Input' editable
     grid_options = gb.build()
 
     # Display the editable grid
