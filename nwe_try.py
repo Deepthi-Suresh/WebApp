@@ -14,12 +14,14 @@ def load_data():
     
     return monthly_data, weekly_data
 
+st.set_page_config(page_title="Grid Example", layout="wide")
+
 # Step 2: Process the user inputs in the original report
 def process_user_input(monthly_data):
     # Configure the editable grid for user input (only "User Input" column)
     gb = GridOptionsBuilder.from_dataframe(monthly_data)
-    gb.configure_column("SKU", editable=False,width=250)  # Make 'Parameter' non-editable
-    gb.configure_column("Rebalancing", editable=True, width=250)  # Make 'User Input' editable
+    gb.configure_column("SKU", editable=False)  # Make 'Parameter' non-editable
+    gb.configure_column("Rebalancing", editable=True)  # Make 'User Input' editable
     grid_options = gb.build()
 
     # Display the editable grid
