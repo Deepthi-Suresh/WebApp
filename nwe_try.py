@@ -35,14 +35,24 @@ def process_user_input(monthly_data):
     # Return the updated monthly data (with user inputs)
     return pd.DataFrame(response["data"])
 
+def calculate_weights(monthly_data):
+    monthly_data['Rebalanced'] = monthly_data['Rebalancing'] + monthly_data['Neptune_Allocation']
+    monthly_data['country_weights'] = monthly_data.groupby(['SKU','PL','Plant','Market_level','Month'])['Rebalanced'].transform(lambda x: x/x.sum()).fillna(0)
+
+    return monthly_data
+
+def updated_monthly(monthly_data):
+    st.subheader("Updated monthly Report with User Inputs")
+    st.dataframe(monthly_data)
+
 # Step 3: Propagate user input from monthly data to weekly data
 def propagate_user_input_to_weekly(monthly_data, weekly_data):
     # Ensure the user input is propagated across the weeks of the month
-    weekly_data['Rebalancing'] = weekly_data['Country'].map(
-        lambda sku: monthly_data[monthly_data['Country'] == sku]['Rebalancing'].values[0] 
+    weekly_data['country_weights'] = weekly_data['Country'].map(
+        lambda sku: monthly_data[monthly_data['Country'] == sku]['country_weights'].values[0] 
         if not monthly_data[monthly_data['Country'] == sku].empty else None
     )
-    
+    weekly_data['Final_alloc'] = weekly_data['Hood'] * weekly_data['country_weights']
     return weekly_data
 
 # Step 4: Display the updated weekly report with user inputs
@@ -82,8 +92,11 @@ def main():
     st.subheader("Original Monthly Report")
     updated_monthly_data = process_user_input(monthly_data)
 
+    updated_monthly_data_w = calculate_weights(updated_monthly_data)
+    updated_monthly(updated_monthly_data_w)
+
     # Once the user inputs are done, propagate the input to the weekly data
-    updated_weekly_data = propagate_user_input_to_weekly(updated_monthly_data, weekly_data)
+    updated_weekly_data = propagate_user_input_to_weekly(updated_monthly_data_w, weekly_data)
 
     # Display the updated weekly report
     display_updated_weekly_report(updated_weekly_data)
